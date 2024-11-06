@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>我的赛博-博客</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            background-image: 
+                linear-gradient(45deg, rgba(2, 17, 20, 0.5) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(2, 17, 20, 0.5) 25%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.05) 0%, transparent 70%),
+                linear-gradient(to bottom, #000000, #001a1a);
+            background-size: 4px 4px, 4px 4px, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+
+        .neon-title {
+            font-size: 4em;
+            text-align: center;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 
+                0 0 5px #0ff,
+                0 0 10px #0ff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 80px rgba(0, 255, 255, 0.5);
+            animation: flicker 1.5s infinite alternate;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #001a1a, #0ff, #001a1a);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .blog-content {
+            background: rgba(0, 15, 20, 0.7);
+            padding: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            margin: 20px 0;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.1),
+                inset 0 0 20px rgba(0, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            background: rgba(0, 10, 15, 0.9);
+        }
+
+        .nav-links a {
+            color: #0ff;
+            text-decoration: none;
+            padding: 5px 15px;
+            border: 1px solid #0ff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a:hover {
+            background: #0ff;
+            color: #000;
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #0ff;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+            left: 0;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #0ff,
+                    0 0 40px #0ff,
+                    0 0 80px #0ff;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+
+        .content-box {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #0ff;
+            box-shadow: 0 0 10px #0ff;
+            color: #fff;
+        }
+
+        .content-box h2 {
+            color: #0ff;
+            margin-top: 0;
+            font-size: 1.5em;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        .content-box p {
+            color: #fff;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        .image-generator {
+            background: rgba(0, 15, 20, 0.7);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            margin: 40px auto;
+            max-width: 1000px;
+        }
+
+        .generator-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.8em;
+            color: #0ff;
+            text-shadow: 
+                0 0 5px #0ff,
+                0 0 10px #0ff;
+        }
+
+        .generator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 1:1 比例 */
+            gap: 30px;
+        }
+
+        .prompt-input {
+            width: 100%;
+            height: 150px; /* 固定高度 */
+            padding: 15px;
+            margin-bottom: 20px;
+            resize: none; /* 禁用调整大小 */
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #000, #001a1a);
+            color: #0ff;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 12px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0;
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            border: 1px solid #0ff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .generate-btn:hover {
+            background: linear-gradient(45deg, #0ff, #00cccc);
+            color: #000;
+            border-color: #0ff;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                inset 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .generate-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .generate-btn:hover:before {
+            left: 100%;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .image-item {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #0ff;
+            padding: 10px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s;
+        }
+
+        .image-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .nav-links {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 0;
+            z-index: 100;
+        }
+
+        /* FAQ 样式 */
+        .faq-section {
+            background: rgba(0, 15, 20, 0.7);
+            padding: 40px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.1),
+                inset 0 0 20px rgba(0, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            margin: 40px auto;
+            max-width: 1000px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            padding-bottom: 20px;
+        }
+
+        .faq-question {
+            color: #0ff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 5px;
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .faq-question:hover {
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .faq-answer {
+            color: #fff;
+            padding-left: 20px;
+            display: none;
+        }
+
+        .faq-question.active + .faq-answer {
+            display: block;
+        }
+
+        /* 价格卡片样式 */
+        .pricing-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;  /* 改为两列布局 */
+            grid-template-areas: 
+                "basic pro"
+                "enterprise enterprise";  /* 企业版占据整行 */
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .price-card {
+            background: rgba(0, 15, 20, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .price-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            border-color: #0ff;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.2),
+                inset 0 0 30px rgba(0, 255, 255, 0.1);
+        }
+
+        /* 为每个卡片指定区域 */
+        .price-card:nth-child(1) {
+            grid-area: basic;
+        }
+
+        .price-card:nth-child(2) {
+            grid-area: pro;
+        }
+
+        .price-card:nth-child(3) {
+            grid-area: enterprise;
+        }
+
+        .price-title {
+            color: #0ff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        .price-amount {
+            font-size: 2.5em;
+            color: #fff;
+            margin: 20px 0;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .price-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .price-features li {
+            margin: 10px 0;
+            color: #fff;
+        }
+
+        .price-btn {
+            background: linear-gradient(45deg, #000, #001a1a);
+            color: #0ff;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 10px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            border: 1px solid #0ff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .price-btn:hover {
+            background: linear-gradient(45deg, #0ff, #00cccc);
+            color: #000;
+            border-color: #0ff;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                inset 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .price-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .price-btn:hover:before {
+            left: 100%;
+        }
+
+        /* 企业版特殊样式 */
+        .price-card:nth-child(3) .price-features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);  /* 功能列表横向排列 */
+            gap: 20px;
+            text-align: left;
+        }
+
+        /* 修改基础配色和背景 */
+        body {
+            background-color: #000;
+            background-image: 
+                linear-gradient(45deg, rgba(2, 17, 20, 0.5) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(2, 17, 20, 0.5) 25%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.05) 0%, transparent 70%),
+                linear-gradient(to bottom, #000000, #001a1a);
+            background-size: 4px 4px, 4px 4px, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+        }
+
+        /* 增强霓虹效果 */
+        .neon-title {
+            font-size: 4em;
+            text-shadow: 
+                0 0 5px #0ff,
+                0 0 10px #0ff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 80px rgba(0, 255, 255, 0.5);
+            background: linear-gradient(90deg, #001a1a, #0ff, #001a1a);
+        }
+
+        /* 卡片样式升级 */
+        .price-card, .blog-content, .image-generator, .faq-section {
+            background: rgba(0, 15, 20, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.1),
+                inset 0 0 20px rgba(0, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .price-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            border-color: #0ff;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.2),
+                inset 0 0 30px rgba(0, 255, 255, 0.1);
+        }
+
+        /* 按钮样式优化 */
+        .generate-btn, .price-btn {
+            background: linear-gradient(45deg, #000, #001a1a);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .generate-btn:hover, .price-btn:hover {
+            background: linear-gradient(45deg, #0ff, #00cccc);
+            color: #000;
+            border-color: #0ff;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                inset 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* 导航栏优化 */
+        .nav-links {
+            background: rgba(0, 10, 15, 0.9);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-links a {
+            background: rgba(0, 15, 20, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        /* FAQ样式优化 */
+        .faq-question {
+            background: rgba(0, 15, 20, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .faq-question:hover {
+            background: rgba(0, 25, 30, 0.7);
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+
+        /* 输入框样式 */
+        .prompt-input {
+            background: rgba(0, 10, 15, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .prompt-input:focus {
+            border-color: #0ff;
+            box-shadow: 
+                0 0 15px rgba(0, 255, 255, 0.2),
+                inset 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 图片网格优化 */
+        .image-item {
+            background: rgba(0, 10, 15, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .image-item:hover {
+            border-color: #0ff;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.2),
+                inset 0 0 10px rgba(0, 255, 255, 0.1);
+        }
+
+        /* 添加动态光效 */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
+            100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.1); }
+        }
+
+        .price-card {
+            animation: glow 3s infinite;
+        }
+
+        /* 标题和副标题样式优化 */
+        .neon-title {
+            font-size: 4em;
+            text-shadow: 
+                0 0 5px #0ff,
+                0 0 10px #0ff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 80px rgba(0, 255, 255, 0.5);
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #fff;
+            text-shadow: 0 0 10px #0ff;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        /* 内容文字样式优化 */
+        .content-box p, .blog-content p, .faq-answer {
+            color: #fff;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+            font-size: 1.1em;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        /* 标题样式优化 */
+        h2 {
+            color: #0ff !important;
+            text-shadow: 
+                0 0 5px #0ff,
+                0 0 10px rgba(0, 255, 255, 0.5) !important;
+            font-size: 1.8em !important;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        /* 价格卡片文字优化 */
+        .price-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            text-shadow: 
+                0 0 5px #0ff,
+                0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .price-amount {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                0 0 5px #0ff,
+                0 0 10px #0ff;
+            margin: 25px 0;
+        }
+
+        .price-features li {
+            color: #fff;
+            font-size: 1.1em;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+            line-height: 1.8;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 15px;
+            margin: 8px 0;
+            border-radius: 4px;
+        }
+
+        /* FAQ文字优化 */
+        .faq-question {
+            font-size: 1.3em;
+            font-weight: 500;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            background: rgba(0, 15, 20, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        /* 按钮文字优化 */
+        .generate-btn, .price-btn {
+            font-size: 1.2em;
+            font-weight: 500;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+            letter-spacing: 2px;
+        }
+
+        /* 导航链接文字优化 */
+        .nav-links a {
+            font-size: 1.1em;
+            font-weight: 500;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        /* 页脚文字优化 */
+        .footer {
+            font-size: 1.1em;
+            text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0, 15, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        /* 左侧品牌名称 */
+        .brand-link {
+            color: #0ff;
+            text-decoration: none;
+            font-size: 1.4em;
+            font-weight: bold;
+            padding: 8px 16px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #0ff;
+            border-radius: 4px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .brand-link:hover {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        /* 中间导航链接 */
+        .nav-center {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+            padding: 8px 16px;
+            position: relative;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #0ff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 右侧登录按钮 */
+        .login-btn {
+            color: #000;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+            padding: 8px 24px;
+            background: #0ff;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-btn:hover {
+            background: #00cccc;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 调整右侧展示区域 */
+        .image-display {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 改为两列 */
+            gap: 20px;
+            padding: 15px;
+        }
+
+        .image-item {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 调整生成器布局比例 */
+        .generator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 改为1:1比例 */
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* 调整输入框大小 */
+        .prompt-input {
+            width: 100%;
+            min-height: 120px; /* 减小高度 */
+            max-height: 150px; /* 限制最大高度 */
+            margin-bottom: 15px;
+            resize: vertical; /* 允许垂直调整大小 */
+            box-sizing: border-box; /* 确保padding不会增加总宽度 */
+        }
+
+        /* 调整图片展示区域 */
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* 只显示一列 */
+            gap: 15px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <div class="nav-brand">
+                <a href="#" class="brand-link">AI Image Generator</a>
+            </div>
+            <div class="nav-center">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="price.html" class="nav-link">Price</a>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="login-btn">Login</a>
+            </div>
+        </nav>
+
+        <div class="image-generator">
+            <h2 class="generator-title">AI Image Creation Lab</h2>
+            <div class="generator-container">
+                <!-- 左侧提示词输入区 -->
+                <div class="prompt-section">
+                    <div class="prompt-header">
+                        <span class="prompt-icon">✨</span>
+                        <h3>Prompt</h3>
+                    </div>
+                    <textarea 
+                        class="prompt-input" 
+                        placeholder="Describe your imagination here...
+Example: A cyberpunk city at night with neon lights and flying cars"
+                    ></textarea>
+                    <button class="generate-btn">
+                        <span class="btn-icon">🎨</span>
+                        Generate Image
+                    </button>
+                </div>
+                
+                <!-- 右侧图片展示区 -->
+                <div class="image-display">
+                    <div class="display-header">
+                        <h3>Generated Results</h3>
+                    </div>
+                    <div class="image-grid">
+                        <div class="image-item">
+                            <img src="placeholder1.jpg" alt="AI Generated Image">
+                        </div>
+                        <div class="image-item">
+                            <img src="placeholder2.jpg" alt="AI Generated Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2 style="color: #0ff; text-shadow: 0 0 5px #0ff;">FAQ</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    How does AI Image Generation work?
+                    <span class="toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    AI image generation uses deep learning models to analyze vast amounts of image data and create new images. When you input a text description, the AI converts your words into corresponding visual elements.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I use the generated images commercially?
+                    <span class="toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Commercial usage rights vary by subscription plan. Basic plan is for personal use only, while Pro and Enterprise plans include commercial licensing.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How fast is the generation process?
+                    <span class="toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Image generation typically takes 10-30 seconds, depending on the complexity of the request and server load.
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>© 2024 赛博AI绘画工具 | 探索无限创意可能</p>
+            <div style="margin-top: 10px; color: #0ff;">
+                <span>联系我们</span> | 
+                <span>使用条款</span> | 
+                <span>隐私政策</span>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
